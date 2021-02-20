@@ -10,8 +10,28 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here 
     fluidPage(
-      fluidRow(h1("TheApp")),
-      fluidRow(tableOutput("my_dataset"))
+      titlePanel(h1("TESTREG")),
+      sidebarLayout(
+        sidebarPanel(
+          h3("Vali võrdlusandmestik"),
+          h2("Eellaetud andmestik seisuga 04.02.2021"),
+          mod_choose_referencedata_ui("choose_referencedata_ui_1")
+          , width = 3
+        ),
+        
+        mainPanel(
+          tabsetPanel(type = "tabs",
+                      tabPanel("Andmed", 
+                               fluidPage(
+                                 fluidRow(tableOutput("preloaded_table")),
+                                 mod_load_fromweb_ui("load_fromweb_ui_1")
+                               )
+                      ),
+                      tabPanel("Analüüs", verbatimTextOutput("summary"))
+          )
+          
+        )
+      )
     )
   )
 }
