@@ -10,26 +10,27 @@
 mod_load_fromweb_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tableOutput(ns("table"))
   )
 }
     
 #' load_fromweb Server Function
 #'
 #' @noRd 
-mod_load_fromweb_server <- function(input, output, session, mod_choose_1){
+mod_load_fromweb_server <- function(input, output, session, r){
   ns <- session$ns
-  observeEvent(mod_choose_1(), {
-    temp_dir = tempdir()
-    temp = tempfile(tmpdir = temp_dir)
-    download.file("https://avaandmed.rik.ee/andmed/ARIREGISTER/ariregister_csv.zip", temp)
-    out = unzip(temp, list = TRUE)$Name
-    unzip(temp, out, exdir = temp_dir)
-    new_dataset <- data.table::fread(file.path(temp_dir, out), encoding="UTF-8")
-    output$table <- renderTable({
-    head(new_dataset[,1:3])   })
-    #r$new_dataset <- new_dataset
-  })
+  
+  #UNCOMMENT FOR PROD!
+    # temp_dir = tempdir()
+    # temp = tempfile(tmpdir = temp_dir)
+    # download.file("https://avaandmed.rik.ee/andmed/ARIREGISTER/ariregister_csv.zip", temp)
+    # out = unzip(temp, list = TRUE)$Name
+    # unzip(temp, out, exdir = temp_dir)
+    # dataset <- data.table::fread(file.path(temp_dir, out), encoding="UTF-8")
+    
+  #COMMENT FOR PROD!
+    dataset <- data.table::fread("C:\\Users\\mai_m\\Desktop\\Loputoo\\Andmed\\ettevotja_rekvisiidid_fordev.csv", encoding="UTF-8")
+    
+    r$new_dataset <- dataset
 }
     
 ## To be copied in the UI

@@ -6,13 +6,24 @@
 #' @noRd
 app_server <- function( input, output, session) {
   # List the first level callModules here
-  output$preloaded_table <- renderTable({
-    head(my_dataset[,1:3])   })
+
+  #used for passing values to and from modules
+  r <- reactiveValues()
   
-  #r <- reactiveValue()
-  mod_choose_1 <- callModule(mod_choose_referencedata_server, "choose_referencedata_ui_1")
-  callModule(mod_load_fromweb_server, "load_fromweb_ui_1", mod_choose_1)
-  #my_dataset <- r$new_dataset
+  callModule(mod_choose_referencedata_server, "choose_referencedata_ui_1", r=r)
   
+  output$table <- renderTable({
+    if(!is.null(r$new_data)){
+      reference_data <- r$new_data
+      #head(r$new_data[,1:3])
+    }
+    else {
+      reference_data <- my_dataset
+      #head(my_dataset[,1:3])
+    }
+    if(!is.null(reference_data)){
+      head(reference_data[,1:3])
+    }
+  })
   
 }

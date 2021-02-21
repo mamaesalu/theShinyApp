@@ -10,16 +10,34 @@
 mod_choose_referencedata_ui <- function(id){
   ns <- NS(id)
   tagList(
-    actionButton(ns("load"), "Laadi värskem andmestik")
-  )
+    
+    radioButtons(ns("data"), "Vali:",
+                 c("Eellaetud andmestik - seisuga 12.2.2021" = "preloaded",
+                   "Laadi uusim - suurus 15 MB" = "load_fromweb"),
+                 selected = "preloaded")
+    )
 }
     
 #' choose_referencedata Server Function
 #'
 #' @noRd 
-mod_choose_referencedata_server <- function(input, output, session){
+mod_choose_referencedata_server <- function(input, output, session, r){
   ns <- session$ns
-  reactive(input$load)
+  
+  observeEvent(input$data, {
+    if (input$data == "load_fromweb"){
+      paste("laadi veebist")
+      
+      if (is.null(r$new_dataset)){
+        callModule(mod_load_fromweb_server, "load_fromweb_ui_1", r=r)
+      }
+      r$new_data <- r$new_dataset
+      
+    }
+    else if (input$data == "preloaded"){
+      r$new_data <- NULL 
+    }
+  })
 }
     
 ## To be copied in the UI

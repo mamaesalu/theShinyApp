@@ -13,8 +13,8 @@ app_ui <- function(request) {
       titlePanel(h1("TESTREG")),
       sidebarLayout(
         sidebarPanel(
-          h3("Vali võrdlusandmestik"),
-          h2("Eellaetud andmestik seisuga 04.02.2021"),
+          h3("Võrdlusandmestik"),
+          tags$a(href="https://www.rik.ee/et/avaandmed", "Allikas Riigi Infosüsteemide Keskuse avaandmed"),
           mod_choose_referencedata_ui("choose_referencedata_ui_1")
           , width = 3
         ),
@@ -23,8 +23,7 @@ app_ui <- function(request) {
           tabsetPanel(type = "tabs",
                       tabPanel("Andmed", 
                                fluidPage(
-                                 fluidRow(tableOutput("preloaded_table")),
-                                 mod_load_fromweb_ui("load_fromweb_ui_1")
+                                 fluidRow(tableOutput("table"))
                                )
                       ),
                       tabPanel("Analüüs", verbatimTextOutput("summary"))
