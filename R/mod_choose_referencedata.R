@@ -10,7 +10,10 @@
 mod_choose_referencedata_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
+    h3("Võrdlusandmestik"),
+    p("Allikas: "),
+    tags$a(href="https://www.rik.ee/et/avaandmed", "Riigi Infosüsteemide Keskuse avaandmed"),
+    tags$hr(),
     radioButtons(ns("data"), "Vali:",
                  c("Eellaetud andmestik - seisuga 12.2.2021" = "preloaded",
                    "Laadi uusim - suurus 15 MB" = "load_fromweb"),

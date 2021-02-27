@@ -21,6 +21,7 @@ usethis::use_package( "thinkr" )
 ## Create a module infrastructure in R/
 golem::add_module( name = "choose_referencedata" ) # Name of the module
 golem::add_module( name = "load_fromweb" ) # Name of the module
+golem::add_module( name = "choose_userdata" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
