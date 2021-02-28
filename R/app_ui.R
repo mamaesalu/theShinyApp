@@ -35,7 +35,10 @@ app_ui <- function(request) {
                                           fluidRow(dataTableOutput("table2"))
                                         )
                                ),
-                      tabPanel("Analüüs")
+                      tabPanel("Analüüs",
+                               fluidRow(
+                                 mod_analysis_ui("analysis_ui_1")
+                               ))
           )
           
         )

@@ -30,5 +30,5 @@ app_server <- function( input, output, session) {
   output$table2 <- renderDataTable({
     r$userdata[,1:5]
   })
-  
+  callModule(mod_analysis_server, "analysis_ui_1", r=r)
 }
