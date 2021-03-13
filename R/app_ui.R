@@ -14,13 +14,15 @@ app_ui <- function(request) {
       sidebarLayout(
         sidebarPanel(
           mod_choose_referencedata_ui("choose_referencedata_ui_1"),
-          mod_choose_userdata_ui("choose_userdata_ui_1")
+          mod_choose_userdata_ui("choose_userdata_ui_1"),
+          actionButton("analyzeButton", "Analüüsi")
           , width = 3
         ),
         
         mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Võrdlusandmed", 
+          tabsetPanel(type = "tabs", id="theTabs",
+                      tabPanel(title = "Võrdlusandmed",
+                               value = "reference",
                                fluidPage(
                                  fluidRow(
                                             tags$h3("Võrdlusandmestik"),
@@ -29,13 +31,15 @@ app_ui <- function(request) {
                                           )
                                  
                                  ),
-                      tabPanel("Kasutaja andmestik",
+                      tabPanel(title ="Kasutaja andmestik",
+                               value = "user",
                                fluidRow(
                                           tags$h3("Kasutaja andmestik"),
                                           fluidRow(dataTableOutput("table2"))
                                         )
                                ),
-                      tabPanel("Analüüs",
+                      tabPanel(title ="Analüüsi tulemused",
+                               value = "analysis",
                                fluidRow(
                                  mod_analysis_ui("analysis_ui_1")
                                ))

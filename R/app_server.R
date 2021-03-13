@@ -25,10 +25,18 @@ app_server <- function( input, output, session) {
     }
   })
   
-  callModule(mod_choose_userdata_server, "choose_userdata_ui_1", r=r)
+  callModule(mod_choose_userdata_server, "choose_userdata_ui_1", r=r, parent_session = session)
  
   output$table2 <- renderDataTable({
-    r$userdata[,1:5]
+    if (!is.null(r$userdata)){
+      r$userdata[,1:5]
+    }
   })
-  callModule(mod_analysis_server, "analysis_ui_1", r=r)
+  
+  observeEvent(input$analyzeButton, {
+    cat("analüüsi vajutus", "\n")
+    updateTabsetPanel(session, "theTabs",
+                      selected = "analysis")
+    callModule(mod_analysis_server, "analysis_ui_1", r=r)
+  })
 }

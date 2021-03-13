@@ -28,12 +28,14 @@ mod_choose_userdata_ui <- function(id){
 #'
 #' @noRd 
 
-mod_choose_userdata_server <- function(input, output, session, r){
+mod_choose_userdata_server <- function(input, output, session, r, parent_session){
   ns <- session$ns
   
   observeEvent(input$file, {
     req(input$file)
     r$userdata <- data.table::fread(input$file$datapath, encoding="UTF-8")
+    updateTabsetPanel(parent_session, "theTabs",
+                      selected = "user")
     updateSelectInput(session, inputId = "data1", choices=colnames(r$userdata))
     updateSelectInput(session, inputId = "data2", choices=colnames(r$userdata))
   })
