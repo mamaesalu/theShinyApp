@@ -15,13 +15,13 @@ app_server <- function( input, output, session) {
   
   output$table <- renderDataTable({
     if(!is.null(r$new_data)){
-      reference_data <- r$new_data
+      r$reference_data <- r$new_data
     }
     else {
-      reference_data <- my_dataset
+      r$reference_data <- my_dataset
     }
-    if(!is.null(reference_data)){
-      reference_data[,1:5]
+    if(!is.null(r$reference_data)){
+      r$reference_data[,1:5]
     }
   })
   

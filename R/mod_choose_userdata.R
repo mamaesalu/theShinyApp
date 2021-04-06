@@ -43,7 +43,7 @@ mod_choose_userdata_server <- function(input, output, session, r, parent_session
   observe({
     r$data1 <- input$data1
     r$data2 <- input$data2
-    msg <- paste(r$data1)
+    msg <- paste(r$data2)
     cat(msg, "\n")
   })
 }
