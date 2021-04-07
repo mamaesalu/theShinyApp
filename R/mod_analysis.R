@@ -12,11 +12,19 @@ mod_analysis_ui <- function(id){
   tagList(
     fluidRow(
       column(plotOutput(ns("missingBar")), width = 6),
-      column(plotOutput(ns("namePie")), width = 6)
+      column(plotOutput(ns("duplicatesBar")), width = 6)
             ),
     fluidRow(
-      column(dataTableOutput(ns("missingTable")), width = 6),
-      column(dataTableOutput(ns("uniqueTable")), width = 6)
+      h3("Kuva mittevastavad kirjed:"),
+      selectInput(ns("select"), "",
+                  c("Väärtustamata nime väli" = "no_name",
+                    "Väärtustamata registrikoodi väli" = "no_regcode",
+                    "Korduvad väärtused nime väljal" = "multiple_names",
+                    "Korduvad väärtused registrikoodi väljal" = "multiple_regcodes")),
+      dataTableOutput(ns("resultsTable"))
+    ),
+    fluidRow(
+      
     )
   )
 }
@@ -37,7 +45,7 @@ mod_analysis_server <- function(input, output, session, r){
   
   #analyze missing values
   userdata <- r$userdata
-  userdata[userdata==""]<-NA
+  #userdata[userdata==""]<-NA
   
   missingvalues <-  userdata %>%
                     dplyr::select(r$data1, r$data2) %>%
@@ -76,7 +84,7 @@ mod_analysis_server <- function(input, output, session, r){
   
   
   
-  output$namePie <- renderPlot({
+  output$duplicatesBar <- renderPlot({
     ggplot2::ggplot(uniquevalues) +
       ggplot2::geom_bar(ggplot2::aes(x = key,
                                      y = pct, fill=num.isunique),
@@ -86,13 +94,45 @@ mod_analysis_server <- function(input, output, session, r){
       ggplot2::guides(fill=ggplot2::guide_legend(title = "Unikaalsed"))
   })
   
-  output$missingTable <- renderDataTable({
-    missingvalues
-  })
-  output$uniqueTable <- renderDataTable({
-    uniquevalues
+  
+  dataToDisplay <- reactive({
+    if(input$select == "no_name"){
+      getMissing(userdata, r$data2)
+    }
+    else if(input$select == "multiple_regcodes"){
+      getDuplicates(userdata, r$data1)
+    }
+    else if(input$select == "no_regcode"){
+      getMissing(userdata, r$data1)
+    }
+    else if(input$select == "multiple_names"){
+      getDuplicates(userdata, r$data2)
+      
+    }
   })
   
+  getMissing <- function(data, col){
+    emptyRows <- dplyr::filter_(userdata, sprintf("is.na(%s)", col))
+    return(emptyRows)
+  }
+  
+  getDuplicates <- function(data, col){
+    duplicatesInCol <- data %>%
+                        dplyr::group_by_at(col) %>%
+                        dplyr::filter(dplyr::n() > 1) %>%
+                        dplyr::filter(!is.na(!!rlang::sym(col))) %>%
+                        data.frame()
+                            
+    return(duplicatesInCol)
+  }
+  
+  observeEvent(input$select, {
+    output$resultsTable <- renderDataTable({
+      dataToDisplay()
+    })
+  })
+  
+
 }
     
 ## To be copied in the UI

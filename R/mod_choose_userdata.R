@@ -33,7 +33,7 @@ mod_choose_userdata_server <- function(input, output, session, r, parent_session
   
   observeEvent(input$file, {
     req(input$file)
-    r$userdata <- data.table::fread(input$file$datapath, encoding="UTF-8")
+    r$userdata <- data.table::fread(input$file$datapath, na.strings = c("",NA), encoding="UTF-8")
     updateTabsetPanel(parent_session, "theTabs",
                       selected = "user")
     updateSelectInput(session, inputId = "data1", choices=colnames(r$userdata))

@@ -28,7 +28,7 @@ mod_load_fromweb_server <- function(input, output, session, r){
     # dataset <- data.table::fread(file.path(temp_dir, out), encoding="UTF-8")
     
   #COMMENT FOR PROD!
-    dataset <- data.table::fread("C:\\Users\\mai_m\\Desktop\\Loputoo\\Andmed\\ettevotja_rekvisiidid_fordev.csv", encoding="UTF-8")
+    dataset <- data.table::fread("C:\\Users\\mai_m\\Desktop\\Loputoo\\Andmed\\ettevotja_rekvisiidid_fordev.csv", na.strings = c("",NA), encoding="UTF-8")
     
     r$new_dataset <- dataset
 }
