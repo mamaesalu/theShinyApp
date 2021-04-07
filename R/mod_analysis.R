@@ -16,11 +16,14 @@ mod_analysis_ui <- function(id){
             ),
     fluidRow(
       h3("Kuva mittevastavad kirjed:"),
-      selectInput(ns("select"), "",
+      selectInput(ns("select1"), "",
                   c("Väärtustamata nime väli" = "no_name",
                     "Väärtustamata registrikoodi väli" = "no_regcode",
                     "Korduvad väärtused nime väljal" = "multiple_names",
                     "Korduvad väärtused registrikoodi väljal" = "multiple_regcodes")),
+      tags$style("#select1 {border: 2px solid #dd4b39;}"),
+      downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
+      tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
       dataTableOutput(ns("resultsTable"))
     ),
     fluidRow(
@@ -132,6 +135,14 @@ mod_analysis_server <- function(input, output, session, r){
     })
   })
   
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$select, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(dataToDisplay(), file, row.names = FALSE)
+    }
+  )
 
 }
     
