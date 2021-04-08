@@ -16,12 +16,11 @@ mod_analysis_ui <- function(id){
             ),
     fluidRow(
       h3("Kuva mittevastavad kirjed:"),
-      selectInput(ns("select1"), "",
+      selectInput(ns("select"), "",
                   c("Väärtustamata nime väli" = "no_name",
                     "Väärtustamata registrikoodi väli" = "no_regcode",
                     "Korduvad väärtused nime väljal" = "multiple_names",
                     "Korduvad väärtused registrikoodi väljal" = "multiple_regcodes")),
-      tags$style("#select1 {border: 2px solid #dd4b39;}"),
       downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
       tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
       dataTableOutput(ns("resultsTable"))

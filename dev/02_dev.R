@@ -18,6 +18,8 @@
 usethis::use_package( "thinkr" )
 usethis::use_package( "naniar" )
 usethis::use_package( "validate" )
+usethis::use_package( "plotly" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -25,6 +27,7 @@ golem::add_module( name = "choose_referencedata" ) # Name of the module
 golem::add_module( name = "load_fromweb" ) # Name of the module
 golem::add_module( name = "choose_userdata" ) # Name of the module 
 golem::add_module( name = "analysis" )
+golem::add_module( name = "analysis2" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

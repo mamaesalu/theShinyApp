@@ -4,6 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
+library(plotly)
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
@@ -38,10 +39,15 @@ app_ui <- function(request) {
                                           fluidRow(dataTableOutput("table2"))
                                         )
                                ),
-                      tabPanel(title ="Analüüsi tulemused",
+                      tabPanel(title ="Kasutaja andmestiku analüüs",
                                value = "analysis",
                                fluidRow(
                                  mod_analysis_ui("analysis_ui_1")
+                               )),
+                      tabPanel(title ="Andmestike võrdlev analüüs",
+                               value = "analysis2",
+                               fluidRow(
+                                 mod_analysis2_ui("analysis2_ui_1")
                                ))
           )
           

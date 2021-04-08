@@ -38,5 +38,6 @@ app_server <- function( input, output, session) {
     updateTabsetPanel(session, "theTabs",
                       selected = "analysis")
     callModule(mod_analysis_server, "analysis_ui_1", r=r)
+    callModule(mod_analysis2_server, "analysis2_ui_1", r=r)
   })
 }
