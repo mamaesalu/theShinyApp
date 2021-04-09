@@ -28,6 +28,7 @@ golem::add_module( name = "load_fromweb" ) # Name of the module
 golem::add_module( name = "choose_userdata" ) # Name of the module 
 golem::add_module( name = "analysis" )
 golem::add_module( name = "analysis2" )
+golem::add_module( name = "analysis_fct_data" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
