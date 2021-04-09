@@ -113,10 +113,7 @@ mod_analysis_server <- function(input, output, session, r){
     }
   })
   
-  getMissing <- function(data, col){
-    emptyRows <- dplyr::filter_(userdata, sprintf("is.na(%s)", col))
-    return(emptyRows)
-  }
+  
   
   getDuplicates <- function(data, col){
     duplicatesInCol <- data %>%
@@ -144,7 +141,10 @@ mod_analysis_server <- function(input, output, session, r){
   )
 
 }
-    
+getMissing <- function(data, col){
+  emptyRows <- dplyr::filter_(data, sprintf("is.na(%s)", col))
+  return(emptyRows)
+}    
 ## To be copied in the UI
 # mod_analysis_ui("analysis_ui_1")
     
