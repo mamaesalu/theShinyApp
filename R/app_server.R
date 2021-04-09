@@ -34,7 +34,6 @@ app_server <- function( input, output, session) {
   })
   
   observeEvent(input$analyzeButton, {
-    cat("analüüsi vajutus", "\n")
     updateTabsetPanel(session, "theTabs",
                       selected = "analysis")
     callModule(mod_analysis_server, "analysis_ui_1", r=r)

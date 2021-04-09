@@ -92,8 +92,8 @@ mod_analysis_server <- function(input, output, session, r){
                                      y = pct, fill=num.isunique),
                         stat = 'identity', alpha=0.8) +
       ggplot2::theme(title=ggplot2::element_text(size=20)) +
-      ggplot2::labs(title = "Unikaalsuse hinnang (%)", x = "", y = "%") +
-      ggplot2::guides(fill=ggplot2::guide_legend(title = "Unikaalsed"))
+      ggplot2::labs(title = "Ühekordsuse hinnang (%)", x = "", y = "%") +
+      ggplot2::guides(fill=ggplot2::guide_legend(title = "Ühekordsed"))
   })
   
   

@@ -12,13 +12,13 @@ mod_analysis2_ui <- function(id){
   tagList(
     fluidRow(
       column(plotlyOutput(ns("missingBar")), width = 6),
-      column(plotOutput(ns("duplicatesBar")), width = 6)
+      column(plotlyOutput(ns("namemismatchPie")), width = 6)
     ),
     fluidRow(
       h3("Mittevastavad kirjed:"),
       selectInput(ns("select"), "",
                   c("Registrikoodid, mida ei ole äriregistris" = "not_present",
-                    "Registrikoodile vastav nimi äriregistris on erinev" = "diff_name")),
+                    "Nimi äriregistris on erinev" = "diff_name")),
       downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
       tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
       dataTableOutput(ns("resultsTable"))
@@ -51,14 +51,11 @@ mod_analysis2_server <- function(input, output, session, r){
     dplyr::mutate(tulemus = ifelse(result == "TRUE", "Omab vastet", "Ei oma vastet")) %>%
     data.frame()
 
-
-  msg <- paste(colnames(df))
-  cat(msg, "\n")
   
   output$missingBar <- renderPlotly({
 
     plotly::plot_ly(df, labels = ~tulemus, values = ~count) %>%
-      plotly::add_pie(hole = 0.6) %>%
+      plotly::add_pie(hole = 0.4) %>%
       plotly::layout(title = "Registrikoodide vastavuse % kasutaja andmestikus <br> võrdluses äriregistri andmetega", font=list(size = 10),
                      showlegend = F,
                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
@@ -69,13 +66,65 @@ mod_analysis2_server <- function(input, output, session, r){
 
   })
   
-  # output$duplicatesBar <- renderPlot(
-  #   #shinipsum::random_ggplot("random")
-  # )
-  # 
-  # output$resultsTable <- renderDataTable({
-  #   #shinipsum::random_DT(5, 5)
-  # })
+  filex <- file3 %>%
+    dplyr::select(ariregistri_kood, nimi, result) %>%
+    dplyr::filter(result != FALSE)
+  
+  file2x <- refdata %>%
+    dplyr::select(ariregistri_kood, nimi) %>%
+    dplyr::rename(nimi_ariregistris = nimi)
+  
+  total <- dplyr::left_join(filex,file2x,by.filex=getcol, by.file2x = ariregistri_kood) %>%
+    dplyr::select(-result) %>%
+    dplyr::mutate(result2 = (.data[[r$data2]] != nimi_ariregistris |is.na(.data[[r$data2]])))
+  
+  
+  df2 <- total %>% dplyr::group_by(result2) %>%
+    dplyr::summarize(count = dplyr::n()) %>%
+    dplyr::mutate(tulemus = ifelse(result2 == "TRUE", "Nimi ei ole vastavuses", "Nimi on vastavuses"))
+  
+  
+  output$namemismatchPie <- renderPlotly({
+    
+    plotly::plot_ly(df2, labels = ~tulemus, values = ~count) %>%
+      plotly::add_pie(hole = 0.4) %>%
+      plotly::layout(title = "Nime vastavuse % kasutaja andmestikus <br> võrdluses äriregistri andmetega", font=list(size = 10),
+                     showlegend = F,
+                     xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                     yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                     margin = list(l = 50, r = 50,
+                                   b = 100, t = 100,
+                                   pad = 50))
+    
+  })
+  
+  observeEvent(input$select, {
+    output$resultsTable <- renderDataTable({
+      dataToDisplay()
+    })
+  })
+  
+  dataToDisplay <- reactive({
+    if(input$select == "not_present"){
+      file3 %>%
+        dplyr::filter(result == F) %>%
+        dplyr::select(-result)
+    }
+    else if(input$select == "diff_name"){
+      total %>%
+        dplyr::filter(result2 == T) %>%
+        dplyr::select(-result2)
+    }
+  })
+  
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$select, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(dataToDisplay(), file, row.names = FALSE)
+    }
+  )
 }
     
 ## To be copied in the UI
