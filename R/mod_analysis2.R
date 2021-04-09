@@ -41,9 +41,10 @@ mod_analysis2_server <- function(input, output, session, r){
   refdata <- r$reference_data
   
   getcol <- unlist(userdata[, grep(r$data1, colnames(userdata)), with=FALSE], use.names = F)
+  getcol2 <- unlist(userdata[, grep(r$data2, colnames(userdata)), with=FALSE], use.names = F)
   
   file3 <-  dplyr::mutate(userdata, result = getcol %in% refdata$ariregistri_kood) %>%
-            dplyr::filter(!is.na(ariregistri_kood))
+            dplyr::filter(!is.na(getcol))
   
   
   df <- file3 %>% dplyr::group_by(result) %>%
@@ -51,7 +52,7 @@ mod_analysis2_server <- function(input, output, session, r){
     dplyr::mutate(tulemus = ifelse(result == "TRUE", "Omab vastet", "Ei oma vastet")) %>%
     data.frame()
 
-  
+
   output$missingBar <- renderPlotly({
 
     plotly::plot_ly(df, labels = ~tulemus, values = ~count) %>%
@@ -67,25 +68,25 @@ mod_analysis2_server <- function(input, output, session, r){
   })
   
   filex <- file3 %>%
-    dplyr::select(ariregistri_kood, nimi, result) %>%
+    dplyr::select(all_of(r$data1), all_of(r$data2), result) %>%
     dplyr::filter(result != FALSE)
-  
+
   file2x <- refdata %>%
     dplyr::select(ariregistri_kood, nimi) %>%
     dplyr::rename(nimi_ariregistris = nimi)
-  
-  total <- dplyr::left_join(filex,file2x,by.filex=getcol, by.file2x = ariregistri_kood) %>%
+
+  total <- filex %>% dplyr::left_join(file2x, by=setNames("ariregistri_kood", r$data1)) %>%
     dplyr::select(-result) %>%
     dplyr::mutate(result2 = (.data[[r$data2]] != nimi_ariregistris |is.na(.data[[r$data2]])))
-  
-  
+
+
   df2 <- total %>% dplyr::group_by(result2) %>%
     dplyr::summarize(count = dplyr::n()) %>%
     dplyr::mutate(tulemus = ifelse(result2 == "TRUE", "Nimi ei ole vastavuses", "Nimi on vastavuses"))
-  
-  
+
+
   output$namemismatchPie <- renderPlotly({
-    
+
     plotly::plot_ly(df2, labels = ~tulemus, values = ~count) %>%
       plotly::add_pie(hole = 0.4) %>%
       plotly::layout(title = "Nime vastavuse % kasutaja andmestikus <br> võrdluses äriregistri andmetega", font=list(size = 10),
@@ -95,15 +96,15 @@ mod_analysis2_server <- function(input, output, session, r){
                      margin = list(l = 50, r = 50,
                                    b = 100, t = 100,
                                    pad = 50))
-    
+
   })
-  
+
   observeEvent(input$select, {
     output$resultsTable <- renderDataTable({
       dataToDisplay()
     })
   })
-  
+
   dataToDisplay <- reactive({
     if(input$select == "not_present"){
       file3 %>%
@@ -116,7 +117,7 @@ mod_analysis2_server <- function(input, output, session, r){
         dplyr::select(-result2)
     }
   })
-  
+
   output$downloadData <- downloadHandler(
     filename = function() {
       paste(input$select, ".csv", sep = "")

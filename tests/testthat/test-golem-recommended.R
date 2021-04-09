@@ -1,4 +1,4 @@
-context("golem tests")
+#context("golem tests")
 
 library(golem)
 

@@ -113,18 +113,6 @@ mod_analysis_server <- function(input, output, session, r){
     }
   })
   
-  
-  
-  getDuplicates <- function(data, col){
-    duplicatesInCol <- data %>%
-                        dplyr::group_by_at(col) %>%
-                        dplyr::filter(dplyr::n() > 1) %>%
-                        dplyr::filter(!is.na(!!rlang::sym(col))) %>%
-                        data.frame()
-                            
-    return(duplicatesInCol)
-  }
-  
   observeEvent(input$select, {
     output$resultsTable <- renderDataTable({
       dataToDisplay()
@@ -142,9 +130,20 @@ mod_analysis_server <- function(input, output, session, r){
 
 }
 getMissing <- function(data, col){
-  emptyRows <- dplyr::filter_(data, sprintf("is.na(%s)", col))
+  getcol <- unlist(data[, grep(col, colnames(data))], use.names = F)
+  emptyRows <- dplyr::filter(data, is.na(getcol))
   return(emptyRows)
-}    
+}
+
+getDuplicates <- function(data, col){
+  duplicatesInCol <- data %>%
+    dplyr::group_by_at(col) %>%
+    dplyr::filter(dplyr::n() > 1) %>%
+    dplyr::filter(!is.na(!!rlang::sym(col))) %>%
+    data.frame()
+  
+  return(duplicatesInCol)
+}
 ## To be copied in the UI
 # mod_analysis_ui("analysis_ui_1")
     
