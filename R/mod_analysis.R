@@ -49,19 +49,10 @@ mod_analysis_server <- function(input, output, session, r){
   userdata <- r$userdata
   #userdata[userdata==""]<-NA
   
-  missingvalues <-  userdata %>%
-                    dplyr::select(r$data1, r$data2) %>%
-                    tidyr::gather(key = "key", value = "val") %>%
-                    dplyr::mutate(isna = !is.na(val)) %>%
-                    dplyr::group_by(key) %>%
-                    dplyr::mutate(total = dplyr::n()) %>%
-                    dplyr::group_by(key, total, isna) %>%
-                    dplyr::summarise(num.isna = dplyr::n()) %>%
-                    dplyr::mutate(pct = num.isna / total * 100)
-
+  missingsummary <- getsummarymissing(userdata, r$data1, r$data2)
   
   output$missingBar <- renderPlot({
-      ggplot2::ggplot(missingvalues) +
+      ggplot2::ggplot(missingsummary) +
       ggplot2::geom_bar(ggplot2::aes(x = key,
                                      y = pct,
                                      fill=isna),
@@ -70,24 +61,11 @@ mod_analysis_server <- function(input, output, session, r){
       ggplot2::labs(title = "Täielikkuse hinnang (%)", x = "", y = "%") +
       ggplot2::guides(fill=ggplot2::guide_legend(title = "Väärtustatud"))
   })
-  
-  
-  
-  #analyze unique values
-  uniquevalues <-  userdata %>%
-    dplyr::select(r$data1, r$data2) %>%
-    tidyr::gather(key = "key", value = "val") %>%
-    dplyr::filter(!is.na(val)) %>%
-    dplyr::group_by(key) %>%
-    dplyr::mutate(total = dplyr::n()) %>%
-    dplyr::group_by(key, total) %>%
-    dplyr::summarise(num.isunique = dplyr::n_distinct(val, na.rm = TRUE)) %>%
-    dplyr::mutate(pct = num.isunique / total * 100)
-  
-  
+
+  uniquesummary <- getsummaryunique(userdata, r$data1, r$data2)
   
   output$duplicatesBar <- renderPlot({
-    ggplot2::ggplot(uniquevalues) +
+    ggplot2::ggplot(uniquesummary) +
       ggplot2::geom_bar(ggplot2::aes(x = key,
                                      y = pct, fill=num.isunique),
                         stat = 'identity', alpha=0.8) +

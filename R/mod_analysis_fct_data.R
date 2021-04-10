@@ -15,3 +15,31 @@ getDuplicates <- function(data, col){
   
   return(duplicatesInCol)
 }
+
+getsummarymissing <- function(data, col1, col2){
+  missingvalues <-  data %>%
+    dplyr::select(col1, col2) %>%
+    tidyr::gather(key = "key", value = "val") %>%
+    dplyr::mutate(isna = !is.na(val)) %>%
+    dplyr::group_by(key) %>%
+    dplyr::mutate(total = dplyr::n()) %>%
+    dplyr::group_by(key, total, isna) %>%
+    dplyr::summarise(num.isna = dplyr::n()) %>%
+    dplyr::mutate(pct = num.isna / total * 100)
+  
+  return(missingvalues)
+}
+
+getsummaryunique <- function(data, col1, col2){
+  uniquevalues <-  data %>%
+    dplyr::select(col1, col2) %>%
+    tidyr::gather(key = "key", value = "val") %>%
+    dplyr::filter(!is.na(val)) %>%
+    dplyr::group_by(key) %>%
+    dplyr::mutate(total = dplyr::n()) %>%
+    dplyr::group_by(key, total) %>%
+    dplyr::summarise(num.isunique = dplyr::n_distinct(val, na.rm = TRUE)) %>%
+    dplyr::mutate(pct = num.isunique / total * 100)
+  
+  return(uniquevalues)
+}
