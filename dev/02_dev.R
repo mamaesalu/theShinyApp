@@ -51,6 +51,7 @@ usethis::use_data_raw( name = "my_dataset", open = FALSE )
 ## Add one line by test you want to create
 usethis::use_test( "app" )
 usethis::use_test("missing_and_duplicates")
+usethis::use_test("matching_regcodes_names")
 
 # Documentation
 

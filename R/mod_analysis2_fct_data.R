@@ -1,6 +1,6 @@
 
 regcodesmatch <- function(data, data2, col1){
-  getcol <- unlist(data[, grep(col1, colnames(data)), with=FALSE], use.names = F)
+  getcol <- unlist(data[, grep(col1, colnames(data))], use.names = F)
   
   file3 <-  dplyr::mutate(data, result = getcol %in% data2$ariregistri_kood) %>%
     dplyr::filter(!is.na(getcol))
