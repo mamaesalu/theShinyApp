@@ -40,22 +40,11 @@ mod_analysis2_server <- function(input, output, session, r){
   userdata <- r$userdata
   refdata <- r$reference_data
   
-  getcol <- unlist(userdata[, grep(r$data1, colnames(userdata)), with=FALSE], use.names = F)
-  getcol2 <- unlist(userdata[, grep(r$data2, colnames(userdata)), with=FALSE], use.names = F)
-  
-  file3 <-  dplyr::mutate(userdata, result = getcol %in% refdata$ariregistri_kood) %>%
-            dplyr::filter(!is.na(getcol))
-  
-  
-  df <- file3 %>% dplyr::group_by(result) %>%
-    dplyr::summarize(count = dplyr::n()) %>%
-    dplyr::mutate(tulemus = ifelse(result == "TRUE", "Omab vastet", "Ei oma vastet")) %>%
-    data.frame()
-
+  codesmatch <- codesmatchingsummary(userdata, refdata, r$data1)
 
   output$missingBar <- renderPlotly({
 
-    plotly::plot_ly(df, labels = ~tulemus, values = ~count) %>%
+    plotly::plot_ly(codesmatch, labels = ~tulemus, values = ~count) %>%
       plotly::add_pie(hole = 0.4) %>%
       plotly::layout(title = "Registrikoodide vastavuse % kasutaja andmestikus <br> võrdluses äriregistri andmetega", font=list(size = 10),
                      showlegend = F,
@@ -67,27 +56,12 @@ mod_analysis2_server <- function(input, output, session, r){
 
   })
   
-  filex <- file3 %>%
-    dplyr::select(all_of(r$data1), all_of(r$data2), result) %>%
-    dplyr::filter(result != FALSE)
-
-  file2x <- refdata %>%
-    dplyr::select(ariregistri_kood, nimi) %>%
-    dplyr::rename(nimi_ariregistris = nimi)
-
-  total <- filex %>% dplyr::left_join(file2x, by=setNames("ariregistri_kood", r$data1)) %>%
-    dplyr::select(-result) %>%
-    dplyr::mutate(result2 = (.data[[r$data2]] != nimi_ariregistris |is.na(.data[[r$data2]])))
-
-
-  df2 <- total %>% dplyr::group_by(result2) %>%
-    dplyr::summarize(count = dplyr::n()) %>%
-    dplyr::mutate(tulemus = ifelse(result2 == "TRUE", "Nimi ei ole vastavuses", "Nimi on vastavuses"))
-
+  namesnotmatching <- namesmismatch(userdata, refdata, r$data1, r$data2)
+  namesnotmatchingtotal <-namesmismatchtotal(userdata, refdata, r$data1, r$data2)
 
   output$namemismatchPie <- renderPlotly({
 
-    plotly::plot_ly(df2, labels = ~tulemus, values = ~count) %>%
+    plotly::plot_ly(namesnotmatching, labels = ~tulemus, values = ~count) %>%
       plotly::add_pie(hole = 0.4) %>%
       plotly::layout(title = "Nime vastavuse % kasutaja andmestikus <br> võrdluses äriregistri andmetega", font=list(size = 10),
                      showlegend = F,
@@ -104,15 +78,17 @@ mod_analysis2_server <- function(input, output, session, r){
       dataToDisplay()
     })
   })
+  
+  codesmatching <- regcodesmatch(userdata, refdata, r$data1)
 
   dataToDisplay <- reactive({
     if(input$select == "not_present"){
-      file3 %>%
+      codesmatching %>%
         dplyr::filter(result == F) %>%
         dplyr::select(-result)
     }
     else if(input$select == "diff_name"){
-      total %>%
+      namesnotmatchingtotal %>%
         dplyr::filter(result2 == T) %>%
         dplyr::select(-result2)
     }
