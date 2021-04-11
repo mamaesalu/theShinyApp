@@ -33,7 +33,9 @@ mod_choose_userdata_server <- function(input, output, session, r, parent_session
   
   observeEvent(input$file, {
     req(input$file)
+    
     r$userdata <- data.table::fread(input$file$datapath, na.strings = c("",NA), encoding="UTF-8")
+    
     updateTabsetPanel(parent_session, "theTabs",
                       selected = "user")
     updateSelectInput(session, inputId = "data1", choices=colnames(r$userdata))
@@ -43,8 +45,6 @@ mod_choose_userdata_server <- function(input, output, session, r, parent_session
   observe({
     r$data1 <- input$data1
     r$data2 <- input$data2
-    msg <- paste(typeof(r$data2))
-    cat(msg, "\n")
   })
 }
     
