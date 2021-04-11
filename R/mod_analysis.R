@@ -57,7 +57,8 @@ mod_analysis_server <- function(input, output, session, r){
                                      y = pct,
                                      fill=isna),
                         stat = 'identity', alpha=0.8) +
-      ggplot2::theme(title=ggplot2::element_text(size=20)) +
+      ggplot2::theme(title=ggplot2::element_text(size=15),
+                     axis.text.x = element_text(size = 15)) +
       ggplot2::labs(title = "Täielikkuse hinnang (%)", x = "", y = "%") +
       ggplot2::guides(fill=ggplot2::guide_legend(title = "Väärtustatud"))
   })
@@ -69,9 +70,10 @@ mod_analysis_server <- function(input, output, session, r){
       ggplot2::geom_bar(ggplot2::aes(x = key,
                                      y = pct, fill=num.isunique),
                         stat = 'identity', alpha=0.8) +
-      ggplot2::theme(title=ggplot2::element_text(size=20)) +
-      ggplot2::labs(title = "Ühekordsuse hinnang (%)", x = "", y = "%") +
-      ggplot2::guides(fill=ggplot2::guide_legend(title = "Ühekordsed"))
+      ggplot2::theme(title=ggplot2::element_text(size=15),
+                     axis.text.x = element_text(size = 15),
+                     legend.position = "none") +
+      ggplot2::labs(title = "Ühekordsuse hinnang (%)", x = "", y = "%")
   })
   
   
