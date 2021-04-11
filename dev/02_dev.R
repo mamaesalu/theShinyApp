@@ -19,6 +19,7 @@ usethis::use_package( "thinkr" )
 usethis::use_package( "naniar" )
 usethis::use_package( "validate" )
 usethis::use_package( "plotly" )
+usethis::use_package( "renv" )
 
 
 ## Add modules ----
