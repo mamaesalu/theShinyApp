@@ -23,7 +23,7 @@ mod_analysis_ui <- function(id){
                     "Korduvad väärtused registrikoodi väljal" = "multiple_regcodes")),
       downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
       tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
-      dataTableOutput(ns("resultsTable"))
+      DT::dataTableOutput(ns("resultsTable"))
     ),
     fluidRow(
       
@@ -76,27 +76,28 @@ mod_analysis_server <- function(input, output, session, r){
       ggplot2::labs(title = "Ühekordsuse hinnang (%)", x = "", y = "%")
   })
   
-  
-  dataToDisplay <- reactive({
-    if(input$select == "no_name"){
-      getMissing(userdata, r$data2)
-    }
-    else if(input$select == "multiple_regcodes"){
-      getDuplicates(userdata, r$data1)
-    }
-    else if(input$select == "no_regcode"){
-      getMissing(userdata, r$data1)
-    }
-    else if(input$select == "multiple_names"){
-      getDuplicates(userdata, r$data2)
-      
-    }
-  })
+  data <- reactiveValues()
   
   observeEvent(input$select, {
-    output$resultsTable <- renderDataTable({
-      dataToDisplay()
-    })
+    if(input$select == "no_name"){
+      data$in_table <- getMissing(userdata, r$data2)
+    }
+    else if(input$select == "multiple_regcodes"){
+      data$in_table <- getDuplicates(userdata, r$data1)
+    }
+    else if(input$select == "no_regcode"){
+      data$in_table <- getMissing(userdata, r$data1)
+    }
+    else if(input$select == "multiple_names"){
+      data$in_table <- getDuplicates(userdata, r$data2)
+    }
+    proxy <- DT::dataTableProxy('resultsTable')
+    
+    DT::replaceData(proxy, data$in_table)
+  })
+  
+  output$resultsTable <- DT::renderDataTable({
+    isolate(data$in_table)
   })
   
   output$downloadData <- downloadHandler(
@@ -104,7 +105,7 @@ mod_analysis_server <- function(input, output, session, r){
       paste(input$select, ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(dataToDisplay(), file, row.names = FALSE)
+      write.csv(data$in_table, file, row.names = FALSE)
     }
   )
 
