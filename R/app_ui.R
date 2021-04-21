@@ -4,7 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
-library(plotly)
+#library(plotly)
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources

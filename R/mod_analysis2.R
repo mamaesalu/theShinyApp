@@ -11,8 +11,8 @@ mod_analysis2_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(plotlyOutput(ns("missingBar")), width = 6),
-      column(plotlyOutput(ns("namemismatchPie")), width = 6)
+      column(plotly::plotlyOutput(ns("missingBar")), width = 6),
+      column(plotly::plotlyOutput(ns("namemismatchPie")), width = 6)
     ),
     fluidRow(
       h3("Mittevastavad kirjed:"),
@@ -42,7 +42,7 @@ mod_analysis2_server <- function(input, output, session, r){
   
   codesmatch <- codesmatchingsummary(userdata, refdata, r$data1)
 
-  output$missingBar <- renderPlotly({
+  output$missingBar <- plotly::renderPlotly({
 
     plotly::plot_ly(codesmatch, labels = ~tulemus, values = ~count) %>%
       plotly::add_pie(hole = 0.4) %>%
@@ -59,7 +59,7 @@ mod_analysis2_server <- function(input, output, session, r){
   namesnotmatching <- namesmismatch(userdata, refdata, r$data1, r$data2)
   namesnotmatchingtotal <-namesmismatchtotal(userdata, refdata, r$data1, r$data2)
 
-  output$namemismatchPie <- renderPlotly({
+  output$namemismatchPie <- plotly::renderPlotly({
 
     plotly::plot_ly(namesnotmatching, labels = ~tulemus, values = ~count) %>%
       plotly::add_pie(hole = 0.4) %>%
