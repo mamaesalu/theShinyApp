@@ -23,6 +23,7 @@ usethis::use_package( "renv" )
 usethis::use_package( "DT" )
 usethis::use_package("shinycssloaders")
 usethis::use_package("dplyr")
+usethis::use_pipe()
 
 
 ## Add modules ----
