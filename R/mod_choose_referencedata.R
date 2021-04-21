@@ -17,7 +17,8 @@ mod_choose_referencedata_ui <- function(id){
     radioButtons(ns("data"), "Vali:",
                  c("Eellaetud andmestik - seisuga 12.2.2021" = "preloaded",
                    "Laadi uusim - suurus 15 MB" = "load_fromweb"),
-                 selected = "preloaded")
+                 selected = "preloaded"),
+    p("Hiljem seda valikut muutes, vajuta uuesti nuppu 'Analüüsi'")
     )
 }
     
@@ -35,7 +36,6 @@ mod_choose_referencedata_server <- function(input, output, session, r){
         callModule(mod_load_fromweb_server, "load_fromweb_ui_1", r=r)
       }
       r$new_data <- r$new_dataset
-      
     }
     else if (input$data == "preloaded"){
       r$new_data <- NULL 

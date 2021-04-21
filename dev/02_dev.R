@@ -21,6 +21,7 @@ usethis::use_package( "validate" )
 usethis::use_package( "plotly" )
 usethis::use_package( "renv" )
 usethis::use_package( "DT" )
+usethis::use_package("shinycssloaders")
 
 
 ## Add modules ----

@@ -14,7 +14,7 @@ mod_choose_userdata_ui <- function(id){
     
     h3("Kasutaja andmestik"), 
     
-    fileInput(ns("file"), label = "Vali CSV fail",
+    fileInput(ns("file"), label = "Vali CSV fail (andmeväljade eraldaja peab olema ';')",
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")),

@@ -21,7 +21,7 @@ app_server <- function( input, output, session) {
       r$reference_data <- my_dataset
     }
     if(!is.null(r$reference_data)){
-      r$reference_data[,1:5]
+      r$reference_data
     }
   })
   
@@ -29,7 +29,7 @@ app_server <- function( input, output, session) {
  
   output$table2 <- renderDataTable({
     if (!is.null(r$userdata)){
-      r$userdata[,1:5]
+      r$userdata
     }
   })
   

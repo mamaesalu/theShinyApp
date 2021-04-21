@@ -11,8 +11,8 @@ mod_analysis_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(plotOutput(ns("missingBar")), width = 6),
-      column(plotOutput(ns("duplicatesBar")), width = 6)
+      column(shinycssloaders::withSpinner(plotOutput(ns("missingBar"))), width = 6),
+      column(shinycssloaders::withSpinner(plotOutput(ns("duplicatesBar"))), width = 6)
             ),
     fluidRow(
       h3("Kuva mittevastavad kirjed:"),
