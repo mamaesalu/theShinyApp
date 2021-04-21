@@ -1,0 +1,13 @@
+name: theShinyApp
+title: theShinyApp
+username:
+account: mmaesa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4009291
+bundleId: 4501873
+url: https://mmaesa.shinyapps.io/theShinyApp/
+when: 1619038193.39665
+lastSyncTime: 1619038193.39665
+asMultiple: FALSE
+asStatic: FALSE

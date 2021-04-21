@@ -22,6 +22,7 @@ usethis::use_package( "plotly" )
 usethis::use_package( "renv" )
 usethis::use_package( "DT" )
 usethis::use_package("shinycssloaders")
+usethis::use_package("dplyr")
 
 
 ## Add modules ----
