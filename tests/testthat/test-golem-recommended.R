@@ -2,6 +2,8 @@
 
 library(golem)
 
+skip_if_not(interactive())
+
 test_that("app ui", {
   ui <- app_ui()
   expect_shinytaglist(ui)
