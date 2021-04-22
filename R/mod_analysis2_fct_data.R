@@ -1,4 +1,14 @@
 
+#' Function for evaluating matching/nonmatcing entries for codes
+#'
+#' @param data 
+#' @param data2 
+#' @param col1 
+#'
+#' @return Returns a dataframe of matching records (in column col1) in data and data2
+#' @export  
+#'
+#' @examples regcodesmatch(data, data2, col1)
 regcodesmatch <- function(data, data2, col1){
   getcol <- unlist(data[, grep(col1, colnames(data))], use.names = F)
   
@@ -8,6 +18,16 @@ regcodesmatch <- function(data, data2, col1){
   return(file3)
 }
 
+#' Function for summarizing matching/nonmatcing entries for codes
+#'
+#' @param data 
+#' @param data2 
+#' @param col1 
+#'
+#' @return Returns a % summary of matching and non-matching entries in column col1 in data and data2
+#' @export
+#'
+#' @examples codesmatchingsummary(data, data2, col1)
 codesmatchingsummary <- function(data, data2, col1){
   
   codesmatching <- regcodesmatch(data, data2, col1)
@@ -20,6 +40,17 @@ codesmatchingsummary <- function(data, data2, col1){
   return(df)
 }
 
+#' Function for evaluating the timeliness of names for the same registry code
+#'
+#' @param data 
+#' @param data2 
+#' @param col1 
+#' @param col2 
+#'
+#' @return Returns result of matching/mismatching in col2 with equal value in col1
+#' @export 
+#'
+#' @examples namesmismatchtotal(data, data2, col1, col2)
 namesmismatchtotal <- function(data, data2, col1, col2){
   codesmatching <- regcodesmatch(data, data2, col1)
   
@@ -38,6 +69,17 @@ namesmismatchtotal <- function(data, data2, col1, col2){
   return(total)
 }
 
+#' Function for summarizing the timeliness of names for the same registry code
+#'
+#' @param data 
+#' @param data2 
+#' @param col1 
+#' @param col2 
+#'
+#' @return Returns a summary of % of the names matching/mismatching in data and data2 and same value in col1
+#' @export
+#'
+#' @examples namesmismatch(data, data2, col1, col2)
 namesmismatch <- function(data, data2, col1, col2){
   total <- namesmismatchtotal(data, data2, col1, col2)
   

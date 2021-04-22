@@ -16,8 +16,8 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package( "thinkr" )
-usethis::use_package( "naniar" )
-usethis::use_package( "validate" )
+usethis::use_package( "stats" )
+usethis::use_package( "utils" )
 usethis::use_package( "plotly" )
 usethis::use_package( "renv" )
 usethis::use_package( "DT" )
