@@ -20,7 +20,9 @@ mod_choose_userdata_ui <- function(id){
                          ".csv")),
     h3("Määra andmeväljade vastavus"),
     selectInput(inputId = ns("data1"), "Registrikood: ", choices= c()),
-    selectInput(inputId = ns("data2"), "Ettevõtte nimi: ", choices= c())
+    selectInput(inputId = ns("data2"), "Ettevõtte nimi: ", choices= c()),
+    textOutput(ns("mymessage")) %>% 
+      tagAppendAttributes(class = 'error')
   )
 }
     
@@ -36,7 +38,29 @@ mod_choose_userdata_server <- function(input, output, session, r, parent_session
     
     file <- input$file
     
-    r$userdata <- data.table::fread(file$datapath, na.strings = c("",NA), encoding="UTF-8")
+    tryCatch({
+      r$userdata <- data.table::fread(file$datapath, na.strings = c("",NA), encoding="UTF-8")
+    },
+    error=function(e) {
+      golem::invoke_js(
+        "loaduserdata",
+        list(
+          filename = file,
+          err = e$message
+        )
+      )
+    },
+    warning = function(w) {
+      golem::invoke_js(
+        "loaduserdata",
+        list(
+          filename = file,
+          err = w$message
+        )
+      )
+    }
+    )
+    
     
     updateTabsetPanel(parent_session, "theTabs",
                       selected = "user")
