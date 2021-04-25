@@ -32,13 +32,17 @@ mod_choose_referencedata_server <- function(input, output, session, r){
     if (input$data == "load_fromweb"){
       paste("laadi veebist")
       
+      if (!is.null(r$new_dataset)){
+        showNotification("Laadi üles oma andmestik (kui pole veel seda teinud) ja vajuta 'Analüüsi' nupule!", type = "message", duration = 10, closeButton = TRUE, session = getDefaultReactiveDomain())
+      }
       if (is.null(r$new_dataset)){
-        callModule(mod_load_fromweb_server, "load_fromweb_ui_1", r=r)
+        callModule(mod_load_fromweb_server, "load_fromweb_ui_1", r=r, parent_session = session)
       }
       r$new_data <- r$new_dataset
     }
     else if (input$data == "preloaded"){
-      r$new_data <- NULL 
+      r$new_data <- NULL
+      showNotification("Laadi üles oma andmestik (kui pole veel seda teinud) ja vajuta 'Analüüsi' nupule!", type = "message", duration = 10, closeButton = TRUE, session = getDefaultReactiveDomain())
     }
   })
 }

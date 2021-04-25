@@ -16,7 +16,7 @@ mod_load_fromweb_ui <- function(id){
 #' load_fromweb Server Function
 #'
 #' @noRd 
-mod_load_fromweb_server <- function(input, output, session, r){
+mod_load_fromweb_server <- function(input, output, session, r, parent_session){
   ns <- session$ns
   
   #UNCOMMENT FOR PROD!
@@ -37,7 +37,8 @@ mod_load_fromweb_server <- function(input, output, session, r){
       )
     },
     error = function(e){ 
-      showNotification("Faili laadimine ebaõnnestus, kasutan analüüsiks eellaaditud andmeid", type = "error", duration = NULL, closeButton = TRUE, session = getDefaultReactiveDomain())
+      showNotification("Faili laadimine ebaõnnestus, kasutan analüüsiks eellaaditud andmeid", type = "error", duration = 10, closeButton = TRUE, session = getDefaultReactiveDomain())
+      updateRadioButtons(parent_session, "data", selected = "preloaded")
     },
     finally = {
       
