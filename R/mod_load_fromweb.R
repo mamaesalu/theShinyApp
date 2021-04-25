@@ -20,17 +20,36 @@ mod_load_fromweb_server <- function(input, output, session, r){
   ns <- session$ns
   
   #UNCOMMENT FOR PROD!
-    temp_dir = tempdir()
-    temp = tempfile(tmpdir = temp_dir)
-    download.file("https://avaandmed.rik.ee/andmed/ARIREGISTER/ariregister_csv.zip", temp)
-    out = unzip(temp, list = TRUE)$Name
-    unzip(temp, out, exdir = temp_dir)
-    dataset <- data.table::fread(file.path(temp_dir, out), encoding="UTF-8")
+  tryCatch(
+    expr = {
+      temp_dir = tempdir()
+      temp = tempfile(tmpdir = temp_dir)
+      download.file("https://avaandmed.rik.ee/andmed/ARIREGISTER/ariregister_csv.zip", temp)
+      out = unzip(temp, list = TRUE)$Name
+      unzip(temp, out, exdir = temp_dir)
+      dataset <- data.table::fread(file.path(temp_dir, out), encoding="UTF-8")
+      r$new_dataset <- dataset
+      golem::invoke_js(
+        "loadfromweb",
+        list(
+          filename = out
+        )
+      )
+    },
+    error = function(e){ 
+      showNotification("Faili laadimine ebaõnnestus, kasutan analüüsiks eellaaditud andmeid", type = "error", duration = NULL, closeButton = TRUE, session = getDefaultReactiveDomain())
+    },
+    finally = {
+      
+    })
+    
+    
+    
 
   #COMMENT FOR PROD!
     # dataset <- data.table::fread("C:\\Users\\mai_m\\Desktop\\Loputoo\\Andmed\\ettevotja_rekvisiidid_fordev.csv", na.strings = c("",NA), encoding="UTF-8")
+    #r$new_dataset <- dataset
     
-    r$new_dataset <- dataset
 }
     
 ## To be copied in the UI

@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-  Shiny.addCustomMessageHandler('fun', function(arg) {
-  
+  Shiny.addCustomMessageHandler('loadfromweb', function(arg) {
+    alert("Andmestiku '"+ arg.filename + "' laadimine ja lugemine õnnestus");
   })
 });
