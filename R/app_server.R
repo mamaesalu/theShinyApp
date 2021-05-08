@@ -40,20 +40,6 @@ app_server <- function( input, output, session) {
     else if(typeof(r$userdata[, r$data1]) != "integer"){
       showNotification("Registrikoodi väljade andmetüüp peab olema täisarv!", type = "error", duration = 10, closeButton = TRUE)
     }
-    # else if(typeof(r$userdata[, r$data2]) == "integer"){
-    #   showNotification("Nime väljade andmetüüp peab olema character. Proovin teisendada", type = "error", duration = 10, closeButton = TRUE)
-    #   tryCatch(
-    #     expr = {
-    #       r$userdata <- r$userdata %>%
-    #                   dplyr::mutate_at(r$data2, as.character)
-    #     },
-    #     error = function(e){ 
-    #       showNotification("Andmetüübi teisendamine ebaõnnestus", type = "error", duration = 10, closeButton = TRUE)
-    #     },
-    #     finally = {
-    #       
-    #     })
-    # }
     else {
       updateTabsetPanel(session, "theTabs",
                         selected = "analysis")
