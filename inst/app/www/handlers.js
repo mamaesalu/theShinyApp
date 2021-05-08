@@ -6,6 +6,6 @@ $( document ).ready(function() {
 
 $( document ).ready(function() {
   Shiny.addCustomMessageHandler('loaduserdata', function(arg) {
-    alert("Andmestiku laadimine ja lugemine õnnestus. Veateade: " + arg.err);
+    alert("Andmestiku lugemine ei õnnestunud. Veateade: " + arg.err);
   })
 });

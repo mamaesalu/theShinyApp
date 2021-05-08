@@ -1,0 +1,27 @@
+
+# TestReg
+
+Tegemist on töövahendiga isikute andmete (nimi ja registrikood)
+kvaliteedi hindamiseks kasutaja andmestikus. Võrdlusandmestik on
+[Registrite ja Infosüsteemide Keskuse avaandmete lehel iganädalaselt
+uuenev äriregistri
+andmestik](https://avaandmed.rik.ee/andmed/ARIREGISTER/) :
+
+Sammud töövahendi kasutamiseks:
+
+1.  otsusta, kas soovid kasutada uusimat versiooni võrdlusandmestikust
+    või sobib ka eellaaditud võrdluandmestik
+
+2.  laadi üles andmestik (CSV fail UTF8 formaadis, andmeväljade
+    eraldajaks semikoolon)
+
+3.  määra andmeväljade vastavus oma andmestikus
+
+4.  vajuta “Analüüsi” nuppu
+
+5.  peale oma andmestiku esmase analüüsi tulemuste vaatlemist liigu
+    järgmisele vahelehele
+
+6.  näed andmestike võrdlustulemusi graafiliselt
+
+7.  soovi korral laadi alla mittevastavate kirjete info CSV formaadis

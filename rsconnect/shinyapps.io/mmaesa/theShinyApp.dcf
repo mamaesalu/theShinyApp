@@ -5,9 +5,9 @@ account: mmaesa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4009291
-bundleId: 4506226
+bundleId: 4517474
 url: https://mmaesa.shinyapps.io/theShinyApp/
-when: 1619115551.22131
-lastSyncTime: 1619115551.22131
+when: 1619378661.49305
+lastSyncTime: 1619378661.49305
 asMultiple: FALSE
 asStatic: FALSE

@@ -15,15 +15,14 @@ mod_analysis2_ui <- function(id){
       column(plotly::plotlyOutput(ns("namemismatchPie")), width = 6)
     ),
     fluidRow(
-      h3("Mittevastavad kirjed:"),
       selectInput(ns("select"), "",
                   c("Registrikoodid, mida ei ole äriregistris" = "not_present",
                     "Nimi äriregistris on erinev" = "diff_name")),
       downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
-      tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
-      dataTableOutput(ns("resultsTable"))
+      tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}"))
     ),
     fluidRow(
+      dataTableOutput(ns("resultsTable"))
     )
   )
 }
@@ -96,7 +95,7 @@ mod_analysis2_server <- function(input, output, session, r){
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste(input$select, ".csv", sep = "")
+      paste(input$select, ".csv", sep = ";")
     },
     content = function(file) {
       write.csv(dataToDisplay(), file, row.names = FALSE)

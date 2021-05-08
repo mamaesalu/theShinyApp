@@ -15,18 +15,16 @@ mod_analysis_ui <- function(id){
       column(shinycssloaders::withSpinner(plotOutput(ns("duplicatesBar"))), width = 6)
             ),
     fluidRow(
-      h3("Kuva mittevastavad kirjed:"),
       selectInput(ns("select"), "",
                   c("Väärtustamata nime väli" = "no_name",
                     "Väärtustamata registrikoodi väli" = "no_regcode",
                     "Korduvad väärtused nime väljal" = "multiple_names",
                     "Korduvad väärtused registrikoodi väljal" = "multiple_regcodes")),
       downloadButton(ns("downloadData"), "Laadi kirjed alla (.csv fail)", class = "downloadbutton"),
-      tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}")),
-      DT::dataTableOutput(ns("resultsTable"))
+      tags$head(tags$style(".downloadbutton{background-color:#dcedc1;} .downloadbutton{color: #133337;}"))
     ),
     fluidRow(
-      
+      DT::dataTableOutput(ns("resultsTable"))
     )
   )
 }
@@ -102,7 +100,7 @@ mod_analysis_server <- function(input, output, session, r){
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste(input$select, ".csv", sep = "")
+      paste(input$select, ".csv", sep = ";")
     },
     content = function(file) {
       write.csv(data$in_table, file, row.names = FALSE)
